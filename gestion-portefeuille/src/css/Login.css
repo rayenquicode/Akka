@@ -1,0 +1,82 @@
+/* 🌆 Ajout d'un fond inspiré de la finance */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to right, #1e3c72, #2a5298);
+  background-image: url("https://www.orientaction.com/wp-content/uploads/2020/09/iStock-1145882183-900x550.jpg");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  color: white;
+}
+
+/* 🌟 Effet de flou pour rendre le formulaire plus lisible */
+.login-container::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+}
+
+/* 📦 Carte contenant le formulaire */
+.login-box {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 350px;
+  z-index: 1;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* 🎯 Titre stylisé */
+.login-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* 🔥 Effet d'animation d’apparition */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 📝 Champs d'entrée */
+.login-input {
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  text-align: center;
+  width: 100%;
+}
+
+/* 🎯 Bouton stylisé */
+.login-button {
+  background-color: #27ae60;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%;
+}
+
+.login-button:hover {
+  background-color: #218c53;
+}
