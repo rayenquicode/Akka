@@ -19,31 +19,54 @@ import spray.json._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import spray.json.DefaultJsonProtocol._
 import akka.util.Timeout
-import akka.actor.typed.scaladsl.AskPattern._ // ✅ Ajout du bon import
+import akka.actor.typed.scaladsl.AskPattern._
 
 import scala.concurrent.duration._
 import scala.util.{Success, Failure}
+import scala.collection.mutable
 
+// ✅ Modèle JSON pour stocker les prix
 trait JsonSupport extends DefaultJsonProtocol {
   implicit val stockFormat: RootJsonFormat[StockPrice] = jsonFormat2(StockPrice.apply)
 }
 case class StockPrice(symbol: String, price: Double)
 
-object YahooFinanceService {
-  val yahooUrl = "https://query1.finance.yahoo.com/v7/finance/quote?symbols="
+// ✅ Service Finnhub avec cache local
+object FinnhubService {
+  val finnhubUrl = "https://finnhub.io/api/v1/quote"
+  val apiKey = "cv1k6i9r01qngf095mj0cv1k6i9r01qngf095mjg" // 🔥 Remplace par ta clé API Finnhub
+
+  // ✅ Cache (clé = symbole, valeur = (prix, timestamp))
+  private val cache: mutable.Map[String, (String, Long)] = mutable.Map()
 
   def getStockPrice(symbol: String)(implicit ec: ExecutionContextExecutor): Future[String] = {
     implicit val backend: SttpBackend[Future, Any] = AsyncHttpClientFutureBackend()
+    val currentTime = System.currentTimeMillis()
 
-    val responseFuture = basicRequest.get(uri"$yahooUrl$symbol").send(backend)
+    cache.get(symbol) match {
+      // ✅ Retourner la valeur du cache si elle date de moins de 60 secondes
+      case Some((price, timestamp)) if (currentTime - timestamp) < 60000 =>
+        Future.successful(price)
+      case _ =>
+        // 🔥 Requête API Finnhub
+        val responseFuture = basicRequest
+          .get(uri"$finnhubUrl?symbol=$symbol&token=$apiKey")
+          .send(backend)
 
-    responseFuture.map(_.body.fold(
-      _ => """{"error": "Impossible de récupérer les données"}""",
-      identity
-    ))
+        responseFuture.map { response =>
+          response.body match {
+            case Right(data) =>
+              cache.put(symbol, (data, currentTime)) // ✅ Mettre à jour le cache
+              data
+            case Left(error) =>
+              """{"error": "Impossible de récupérer les données"}"""
+          }
+        }
+    }
   }
 }
 
+// ✅ Gestion des utilisateurs (acteur Akka Typed)
 object UserManager {
   sealed trait Command
   case class CreateUser(name: String, replyTo: ActorRef[String]) extends Command
@@ -75,19 +98,20 @@ object UserManager {
   }
 }
 
+// ✅ Serveur Akka HTTP
 object Main extends App with JsonSupport {
   implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "GestionPortefeuille")
   implicit val executionContext: ExecutionContextExecutor = system.executionContext
-  implicit val timeout: Timeout = Timeout(5.seconds) // ✅ Timeout obligatoire
-  implicit val scheduler: Scheduler = system.scheduler // ✅ Ajout du Scheduler requis pour `ask`
+  implicit val timeout: Timeout = Timeout(5.seconds)
+  implicit val scheduler: Scheduler = system.scheduler
 
   val userManager: ActorSystem[UserManager.Command] = ActorSystem(UserManager(), "UserManager")
 
   val route =
     concat(
-      path("yahoo-price" / Segment) { symbol =>
+      path("finnhub-price" / Segment) { symbol =>
         get {
-          onComplete(YahooFinanceService.getStockPrice(symbol)) {
+          onComplete(FinnhubService.getStockPrice(symbol)) {
             case Success(priceData) =>
               complete(HttpEntity(ContentTypes.`application/json`, priceData))
             case Failure(ex) =>
@@ -116,5 +140,5 @@ object Main extends App with JsonSupport {
     )
 
   val bindingFuture = Http().newServerAt("localhost", 8080).bind(route)
-  println("🚀 Serveur API Yahoo Finance démarré sur http://localhost:8080")
+  println("🚀 Serveur API Finnhub démarré sur http://localhost:8080")
 }
