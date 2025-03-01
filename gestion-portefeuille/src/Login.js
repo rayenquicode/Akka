@@ -8,7 +8,7 @@ const Login = ({ onLogin }) => {
   // 🔐 Liste des utilisateurs fictifs
   const users = [
     { pseudo: "user1", password: "1234" },
-    { pseudo: "user2", password: "5678" }
+
   ];
 
   const handleSubmit = (e) => {
