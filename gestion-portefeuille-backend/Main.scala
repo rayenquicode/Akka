@@ -1,4 +1,5 @@
 //> using dep com.typesafe.akka::akka-actor-typed:2.8.8
+//> using dep ch.qos.logback:logback-classic:1.5.17
 //> using dep com.typesafe.akka::akka-stream:2.8.8
 //> using dep com.typesafe.akka::akka-http:10.5.3
 //> using dep com.typesafe.akka::akka-http-spray-json:10.5.3
