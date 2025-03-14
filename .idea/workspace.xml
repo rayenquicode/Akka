@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d298deab-a5ca-40b9-944f-9eb891624064" name="Changes" comment="TEst" />
+    <list default="true" id="d298deab-a5ca-40b9-944f-9eb891624064" name="Changes" comment="Ajout actions portfeuille">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -188,7 +190,7 @@
       <workItem from="1741810611774" duration="1211000" />
       <workItem from="1741875832659" duration="2719000" />
       <workItem from="1741881749970" duration="6849000" />
-      <workItem from="1741961268809" duration="10187000" />
+      <workItem from="1741961268809" duration="10601000" />
     </task>
     <task id="LOCAL-00001" summary="Nouveaux back">
       <created>1741800952508</created>
@@ -218,7 +220,14 @@
       <option name="project" value="LOCAL" />
       <updated>1741806293485</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Ajout actions portfeuille">
+      <created>1741974447434</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1741974447434</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -251,6 +260,7 @@
     <MESSAGE value="Nouveaux back" />
     <MESSAGE value="Back termine" />
     <MESSAGE value="TEst" />
-    <option name="LAST_COMMIT_MESSAGE" value="TEst" />
+    <MESSAGE value="Ajout actions portfeuille" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajout actions portfeuille" />
   </component>
 </project>
