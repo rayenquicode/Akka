@@ -1,0 +1,18 @@
+1741710290226:run
+1741713658110:sbt udpate
+1741713705520:run
+1741714024643:sbt udpate
+1741714110550:run
+1741797502517:import sttp.client3._
+1741797502638:import sttp.client3.asynchttpclient.future.AsyncHttpClientFutureBackend
+1741797502719:implicit val backend = AsyncHttpClientFutureBackend()
+1741797502823:val response = basicRequest.get(uri"https://finnhub.io/api/v1/quote?symbol=AAPL&token=cv1k6i9r01qngf095mj0cv1k6i9r01qngf095mjg").send(backend)
+1741797502862:response.foreach(println)
+1741797664359:run
+1741883713062:sbt update
+1741883744594:run
+1741886480486:sbt console
+1741961424782:run
+1741970477191:def registerUser(username: String, password: String)(implicit ec: ExecutionContext): Future[Boolean] = Future {
+1741970478004:}
+1741970516847:run
