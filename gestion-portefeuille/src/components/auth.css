@@ -1,0 +1,126 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+}
+
+.auth-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url('https://media.istockphoto.com/id/1487894858/fr/photo/graphique-en-chandelier-et-donn%C3%A9es-du-march%C3%A9-financier.jpg?s=612x612&w=0&k=20&c=tJoRghcmr2l10qJflJUkmY1kGjUqjccYGxiBSxRiQFc=')
+    no-repeat center center/cover;
+}
+
+.auth-container::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+}
+
+.auth-box {
+    position: relative;
+    width: 380px;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 12px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    color: white;
+}
+
+.auth-box h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ffdd57;
+}
+
+.auth-box p {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.auth-box input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.auth-box input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.auth-box input:focus {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: #ffdd57;
+    box-shadow: 0px 0px 6px rgba(255, 255, 255, 0.4);
+}
+
+.auth-box button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    background: linear-gradient(135deg, #ffdd57, #ff9900);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.auth-box button:hover {
+    background: linear-gradient(135deg, #ffcc00, #ff6600);
+    box-shadow: 0px 5px 15px rgba(255, 204, 0, 0.5);
+}
+
+.auth-link a {
+    color: #ffdd57;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.auth-link a:hover {
+    color: #ffaa00;
+    text-decoration: underline;
+}
+
+
+.auth-link a:hover {
+    text-decoration: underline;
+}
+
+.error {
+    color: #ff3b3b;
+    font-weight: bold;
+    background: rgba(255, 0, 0, 0.25);
+    padding: 8px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}

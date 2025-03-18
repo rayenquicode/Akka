@@ -1,0 +1,176 @@
+/* ✅ Réinitialisation et styles globaux */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Arial", sans-serif;
+}
+
+body {
+    overflow-y: auto; /* Active le scroll */
+    background: #f4f7f9;
+}
+
+.dashboard {
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* ✅ Conteneur des graphiques */
+.charts-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+/* ✅ Taille et style des graphiques */
+.chart {
+    width: 48%;
+    max-width: 500px;
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Empêche le débordement des graphiques */
+canvas {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* ✅ Tableau des actions */
+table {
+    width: 100%;
+    margin-top: 20px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background: #3498db;
+    color: white;
+}
+
+/* ✅ Meilleur alignement des nombres */
+table td:nth-child(2),
+table td:nth-child(3) {
+    text-align: center;
+}
+
+/* ✅ Effet au survol des lignes du tableau */
+table tr:hover {
+    background: #ecf0f1;
+}
+
+/* ✅ Style des boutons */
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: white;
+}
+
+/* ✅ Bouton "Ajouter" */
+.add-btn {
+    background: #3498db; /* Bleu */
+}
+
+.add-btn:hover {
+    background: #2980b9;
+}
+
+/* ✅ Bouton "Retirer" */
+.remove-btn {
+    background: #e74c3c;
+}
+
+.remove-btn:hover {
+    background: #c0392b;
+}
+
+/* ✅ Ajustement du champ de quantité et du bouton dans le tableau */
+td input {
+    width: 60%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+td button {
+    width: auto;
+    display: inline-block;
+}
+
+/* ✅ Amélioration de la boîte de formulaire */
+.form-box {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Style des champs de formulaire */
+input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+/* ✅ Messages d'erreur et de succès */
+.error {
+    color: #e74c3c;
+    background: #f8d7da;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.message {
+    color: #2ecc71;
+    background: #d4edda;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* ✅ Ajustement pour Mobile */
+@media screen and (max-width: 768px) {
+    .charts-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .chart {
+        width: 90%;
+    }
+
+    td input {
+        width: 50%;
+    }
+}

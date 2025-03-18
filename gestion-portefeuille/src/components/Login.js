@@ -1,0 +1,66 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import './auth.css';
+
+const API_URL = 'http://localhost:9000';
+
+const Login = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+            localStorage.removeItem("token");
+            sessionStorage.clear();
+
+            const response = await axios.post(`${API_URL}/login`, { username, password });
+            localStorage.setItem("token", response.data.token);
+            navigate("/dashboard");
+        } catch (error) {
+            setError("Identifiants incorrects, veuillez réessayer.");
+        }
+    };
+
+    return (
+        <div className="auth-container">
+            <div className="auth-box">
+                <h2>Connexion à <span>AKKA</span></h2>
+                <p>Accédez à votre portefeuille.</p>
+
+                {error && <p className="error">{error}</p>}
+
+                <form onSubmit={handleLogin}>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Nom d'utilisateur"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                    />
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Mot de passe"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                    <button type="submit">Se connecter</button>
+                </form>
+
+                <p className="switch-auth">
+                    Pas encore de compte ? <a href="/register">Inscrivez-vous</a>
+                </p>
+            </div>
+        </div>
+    );
+};
+
+export default Login;

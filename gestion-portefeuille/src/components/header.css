@@ -1,0 +1,149 @@
+/* ✅ HEADER PRINCIPAL */
+.header {
+    width: 100%;
+    height: 65px;
+    background: linear-gradient(to right, #0046a3, #007bff);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+/* ✅ LOGO */
+.logo {
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+    color: #ffdd57;
+}
+
+/* ✅ NAVIGATION */
+nav {
+    display: flex;
+    gap: 15px; /* Espacement entre les boutons */
+}
+
+/* ✅ BOUTONS DASHBOARD & SIMULATION (Maintenant en BLEU) */
+nav button {
+    background: linear-gradient(135deg, #0056b3, #003d82); /* Bleu plus foncé */
+    color: white;
+    border: none;
+    padding: 7px 14px; /* Taille affinée */
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.3s ease-in-out;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ✅ Effet lumineux subtil */
+nav button::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.15);
+    transition: all 0.5s ease-in-out;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+/* ✅ Animation au survol */
+nav button:hover::before {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* ✅ Effet de survol plus doux */
+nav button:hover {
+    background: linear-gradient(135deg, #007bff, #0046a3); /* Bleu plus clair */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+/* ✅ Effet de clic */
+nav button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* ✅ BOUTON DÉCONNEXION */
+.logout-btn {
+    background: transparent;
+    color: white;
+    border: 1.5px solid white;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 15px;
+    transition: all 0.3s ease-in-out;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: auto;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ✅ Effet lumineux subtil */
+.logout-btn::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: all 0.6s ease-in-out;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+/* ✅ Animation au survol */
+.logout-btn:hover::before {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* ✅ Effet de survol */
+.logout-btn:hover {
+    background: white;
+    color: #0046a3;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.3);
+}
+
+/* ✅ Effet de clic */
+.logout-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.2);
+}
+
+/* ✅ MESSAGE DE SIMULATION */
+.simulation-message {
+    color: #007bff;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 15px;
+    text-align: center;
+}

@@ -1,0 +1,4 @@
+# Ignorer les fichiers volumineux et temporaires
+node_modules/
+*.pack
+.cache/
