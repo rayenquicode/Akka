@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d298deab-a5ca-40b9-944f-9eb891624064" name="Changes" comment="Ajout actions portfeuille" />
+    <list default="true" id="d298deab-a5ca-40b9-944f-9eb891624064" name="Changes" comment="Ajout actions portfeuille">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gestion-portefeuille/src/components/Dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/gestion-portefeuille/src/components/Dashboard.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -195,7 +198,8 @@
       <workItem from="1742305856266" duration="3481000" />
       <workItem from="1742310928669" duration="3928000" />
       <workItem from="1742315212883" duration="5135000" />
-      <workItem from="1742326225689" duration="8688000" />
+      <workItem from="1742326225689" duration="8897000" />
+      <workItem from="1742385790364" duration="4447000" />
     </task>
     <task id="LOCAL-00001" summary="Nouveaux back">
       <created>1741800952508</created>

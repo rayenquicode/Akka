@@ -212,7 +212,7 @@ const Dashboard = ({ token }) => {
         labels: priceHistory.map(entry => new Date(entry.timestamp).toLocaleDateString()), // ✅ Affichage correct des dates
         datasets: [
             {
-                label: `Fluctuation du prix `, // ✅ Correction du label
+                label: `Fluctuation du prix cd`, // ✅ Correction du label
                 data: priceHistory.map(entry => entry.price),
                 borderColor: "#FF9800",
                 fill: false,
@@ -237,6 +237,15 @@ const Dashboard = ({ token }) => {
                         <h3>Répartition des Actifs</h3>
                         <h3>Total Investi: {totalInvested.toFixed(2)} €</h3>
                         <Pie data={portfolioData} />
+                    </div>
+                    <div className="form-box">
+                        <h3>➕ Ajouter un Actif</h3>
+                        <form onSubmit={handleAddAsset}>
+                            <input type="text" placeholder="Symbole (ex: AAPL)" value={symbol} onChange={(e) => setSymbol(e.target.value)} required />
+                            <input type="number" placeholder="Quantité" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
+                            <button type="submit" className="add-btn">Ajouter</button>
+
+                        </form>
                     </div>
                     <div className="chart">
                         <h3>{selectedSymbol ? `Évolution du prix de ${selectedSymbol}` : "Sélectionnez une action"}</h3>
@@ -292,14 +301,7 @@ const Dashboard = ({ token }) => {
                     </tbody>
                 </table>
 
-                <div className="form-box">
-                    <h3>➕ Ajouter un Actif</h3>
-                    <form onSubmit={handleAddAsset}>
-                        <input type="text" placeholder="Symbole (ex: AAPL)" value={symbol} onChange={(e) => setSymbol(e.target.value)} required />
-                        <input type="number" placeholder="Quantité" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
-                        <button type="submit">Ajouter</button>
-                    </form>
-                </div>
+
             </div>
         </>
     );

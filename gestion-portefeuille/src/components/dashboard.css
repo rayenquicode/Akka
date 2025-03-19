@@ -91,10 +91,28 @@ button {
     color: white;
 }
 
-/* ✅ Bouton "Ajouter" */
+
+/* ✅ Amélioration du bouton "Ajouter" avec un dégradé bleu */
 .add-btn {
-    background: #3498db; /* Bleu */
+    background: linear-gradient(135deg, #3498db, #1e90ff); /* Dégradé bleu */
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 30px; /* Bords arrondis */
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Ombre pour relief */
 }
+
+/* ✅ Effet au survol */
+.add-btn:hover {
+    background: linear-gradient(135deg, #1e90ff, #007bff); /* Bleu plus intense */
+    transform: scale(1.05); /* Effet zoom */
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* Ombre plus marquée */
+}
+
 
 .add-btn:hover {
     background: #2980b9;
