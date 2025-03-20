@@ -36,7 +36,7 @@ const Login = ({ setToken }) => {
     return (
         <div className="auth-container">
             <div className="auth-box">
-                <h2>Connexion à <span>AKKA</span></h2>
+                <h2>Connexion à <span>AKKA RRYZM</span></h2>
                 <p>Accédez à votre portefeuille.</p>
 
                 {error && <p className="error">{error}</p>}

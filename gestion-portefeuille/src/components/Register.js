@@ -25,7 +25,7 @@ const Register = () => {
         <div className="auth-container">
             <div className="auth-box">
                 <h2>Créer un compte</h2>
-                <p>Rejoignez <span>AKKA</span> dès maintenant.</p>
+                <p>Rejoignez <span>AKKA RRYZM</span> dès maintenant.</p>
 
                 {error && <p className="error">{error}</p>}
 
