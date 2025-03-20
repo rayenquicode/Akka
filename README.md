@@ -13,7 +13,7 @@ USE portefeuille;
 
 DROP TABLE IF EXISTS portfolios;
 CREATE TABLE IF NOT EXISTS portfolios (
-  user_id VARCHAR(255) NOT NULL,
+  user_id VARCHAR(190) NOT NULL,
   symbol VARCHAR(10) NOT NULL,
   quantity INT NOT NULL,
   total_price DOUBLE DEFAULT 0,
@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS price_history (
 DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS users (
   id INT NOT NULL AUTO_INCREMENT,
-  username VARCHAR(255) NOT NULL,
-  password VARCHAR(255) NOT NULL,
+  username VARCHAR(190) NOT NULL,
+  password VARCHAR(190) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY username (username)
 );
