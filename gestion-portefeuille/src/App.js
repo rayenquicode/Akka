@@ -7,7 +7,6 @@ import Simulation from './components/Simulation';
 import Chatbot from './components/Chatbot';
 import Header from './components/Header';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './styles.css';
 
 const App = () => {
     const [token, setToken] = useState(localStorage.getItem('token'));

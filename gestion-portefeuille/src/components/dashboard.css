@@ -32,6 +32,7 @@ body {
     overflow-x: hidden;
     color: white;
     position: relative;
+
 }
 
 body::before {
@@ -175,49 +176,110 @@ input:focus {
     background: rgba(255, 255, 255, 0.3);
 }
 
-/* ✅ Boutons modernisés */
-/* ✅ Styles uniformisés pour tous les boutons */
-button, .add-btn, .remove-btn, .view-btn {
-    padding: 10px 14px;
-    font-size: 15px;
-    font-weight: bold;
+/* ✅ Améliorer l'espacement entre les blocs */
+.charts-container {
+    display: flex;
+    justify-content: space-between; /* Équilibre mieux les blocs */
+    gap: 40px; /* Augmenter l'espacement entre les sections */
+    width: 100%;
+    max-width: 1400px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+/* ✅ Style des champs de saisie */
+.inputD {
+    width: 100%; /* S'assure que chaque champ prend toute la largeur disponible */
+    padding: 12px;
     border-radius: 8px;
+    border: 2px solid #ccc;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+    font-size: 16px;
+    box-sizing: border-box; /* S'assure que le padding n'affecte pas la largeur totale */
+    margin-bottom: 15px; /* Espacement entre les champs */
+    transition: border-color 0.3s ease-in-out; /* Effet visuel lors de la mise au focus */
+}
+
+
+
+input:focus {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid white;
+    outline: none;
+}
+
+/* ✅ Adapter la taille et la largeur des boutons */
+button, .add-btn, .remove-btn, .view-btn {
+    padding: 6px 12px; /* Moins large */
+    font-size: 13px; /* Texte plus fin */
+    font-weight: 500;
+    border-radius: 6px;
+    width: 100%;
     cursor: pointer;
-    background: transparent;
+    background: linear-gradient(45deg, #28a745, #218838);
     color: white;
-    border: 2px solid white; /* Ajout d'une bordure blanche */
+    border: 1px solid rgba(255, 255, 255, 0.5);
     transition: all 0.3s ease-in-out;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-/* ✅ Effet de survol identique aux boutons du header */
+/* ✅ Ajuster l'effet au survol */
 button:hover, .add-btn:hover, .remove-btn:hover, .view-btn:hover {
-    background: white;
-    color: black !important;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    background: linear-gradient(45deg, #218838, #1e7e34);
+    box-shadow: 0 0 8px rgba(40, 167, 69, 0.5);
+    transform: translateY(-1px);
 }
 
-
-/* ✅ Scroll activé */
-html {
-    overflow-y: auto;
+/* ✅ Amélioration des boutons spécifiques */
+.add-btn {
+    background: linear-gradient(45deg, #007bff, #0056b3);
 }
 
-/* ✅ Adaptation pour Mobile */
+.remove-btn {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+}
+
+.view-btn {
+    background: linear-gradient(45deg, #ffc107, #e0a800);
+}
+
+/* ✅ Ajustement de la table pour une meilleure visibilité */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    font-size: 14px;
+    text-align: center;
+}
+
+th {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    text-transform: uppercase;
+}
+
+td {
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 4px;
+}
+
+/* ✅ Adapter pour mobile */
 @media screen and (max-width: 768px) {
-    .charts-container, .table-container {
+    .charts-container {
         flex-direction: column;
         align-items: center;
     }
 
     .chart, .form-box {
-        width: 90%;
-        min-height: 400px;
+        width: 95%;
     }
 
-    table th, table td {
-        padding: 10px;
-        font-size: 14px;
+    button {
+        width: 100%;
     }
-
-
 }

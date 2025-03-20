@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import './chatbot.css';
+import styles from "./chatbot.css";
 
 const Chatbot = () => {
     const [messages, setMessages] = useState([]);
@@ -18,7 +18,7 @@ const Chatbot = () => {
 
         try {
             const response = await axios.post(
-                "https://api-inference.huggingface.co/models/gpt2", // Modèle GPT-2 Hugging Face, pas de clé nécessaire
+                "https://api-inference.huggingface.co/models/gpt2",
                 { inputs: input },
                 { headers: { "Content-Type": "application/json" } }
             );

@@ -3,7 +3,7 @@ import axios from "axios";
 import { Pie, Line } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement } from "chart.js";
 import Header from "./Header";
-import "./dashboard.css";
+import styles from "./dashboard.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement);
 
@@ -302,9 +302,9 @@ const Dashboard = ({ token }) => {
                     <div className="form-box">
                         <h3> Ajouter un Actif</h3>
                         <form onSubmit={handleAddAsset}>
-                            <input type="text" placeholder="Symbole (ex: AAPL)" value={symbol} onChange={(e) => setSymbol(e.target.value)} required />
-                            <input type="number" placeholder="Quantité" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
-                            <button type="submit" className="add-btn">Ajouter</button>
+                            <input classname="inputD" type="text" placeholder="Symbole (ex: AAPL)" value={symbol} onChange={(e) => setSymbol(e.target.value)} required />
+                            <input classname="inputD" type="number" placeholder="Quantité" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
+                         <center>  <button type="submit" className="add-btn">Ajouter</button> </center>
 
                         </form>
                     </div>
