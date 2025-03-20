@@ -4,6 +4,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import Simulation from './components/Simulation'; // ✅ Ajout de l'import pour Simulation
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
 
 const App = () => {

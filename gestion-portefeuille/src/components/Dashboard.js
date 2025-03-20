@@ -203,18 +203,76 @@ const Dashboard = ({ token }) => {
         datasets: [
             {
                 data: portfolio.map(asset => asset.quantity),
-                backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4CAF50", "#FF9800"],
+                backgroundColor: ["#009FFD", "#5AC8FA", "#F4C724", "#2ECC71", "#E67E22"],
             },
         ],
     };
+
+// ✅ Définit les options du Pie Chart séparément
+    const pieChartOptions = {
+        plugins: {
+            legend: {
+                labels: {
+                    color: "white", // 🔥 Mettre le texte des légendes en blanc
+                    font: {
+                        size: 14,
+                        weight: "bold"
+                    }
+                }
+            }
+        }
+    };
+
+
+    const chartOptions = {
+        responsive: true,
+        plugins: {
+            legend: {
+                labels: {
+                    color: "white", // 🔥 Rendre la légende plus visible
+                    font: {
+                        size: 14,
+                        weight: "bold"
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: "white", // 🔥 Couleur blanche pour les valeurs de l'axe X
+                    font: {
+                        size: 12,
+                        weight: "bold"
+                    }
+                },
+                grid: {
+                    color: "rgba(255, 255, 255, 0.2)" // 🔥 Grille plus discrète
+                }
+            },
+            y: {
+                ticks: {
+                    color: "white", // 🔥 Couleur blanche pour les valeurs de l'axe Y
+                    font: {
+                        size: 14,
+                        weight: "bold"
+                    }
+                },
+                grid: {
+                    color: "rgba(255, 255, 255, 0.2)" // 🔥 Atténuer la grille
+                }
+            }
+        }
+    };
+
 
     const marketChartData = priceHistory.length > 0 ? {
         labels: priceHistory.map(entry => new Date(entry.timestamp).toLocaleDateString()), // ✅ Affichage correct des dates
         datasets: [
             {
-                label: `Fluctuation du prix cd`, // ✅ Correction du label
+                label: `Fluctuation du prix`, // ✅ Correction du label
                 data: priceHistory.map(entry => entry.price),
-                borderColor: "#FF9800",
+                borderColor: "#00BCD4",
                 fill: false,
                 tension: 0.4,
             },
@@ -223,23 +281,22 @@ const Dashboard = ({ token }) => {
 
 
 
-
     return (
         <>
             <Header />
             <div className="dashboard">
-                <h2>📊 Mon Portefeuille</h2>
                 {error && <p className="error">{error}</p>}
                 {message && <p className="message">{message}</p>}
 
                 <div className="charts-container">
                     <div className="chart">
                         <h3>Répartition des Actifs</h3>
-                        <h3>Total Investi: {totalInvested.toFixed(2)} €</h3>
-                        <Pie data={portfolioData} />
+                        <h3>Total  {totalInvested.toFixed(2)} € </h3>
+                        <Pie data={portfolioData} options={pieChartOptions} />
+
                     </div>
                     <div className="form-box">
-                        <h3>➕ Ajouter un Actif</h3>
+                        <h3> Ajouter un Actif</h3>
                         <form onSubmit={handleAddAsset}>
                             <input type="text" placeholder="Symbole (ex: AAPL)" value={symbol} onChange={(e) => setSymbol(e.target.value)} required />
                             <input type="number" placeholder="Quantité" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
@@ -250,10 +307,11 @@ const Dashboard = ({ token }) => {
                     <div className="chart">
                         <h3>{selectedSymbol ? `Évolution du prix de ${selectedSymbol}` : "Sélectionnez une action"}</h3>
                         {marketChartData && marketChartData.datasets[0].data.length > 0 ? (
-                            <Line data={marketChartData} />
+                            <Line data={marketChartData} options={chartOptions} />
                         ) : (
                             <p>Aucune donnée historique disponible.</p>
                         )}
+
                     </div>
 
 
@@ -266,8 +324,10 @@ const Dashboard = ({ token }) => {
                         <th>Quantité</th>
                         <th>Valeur Totale (€)</th>
                         <th>Action</th>
+                        <th>Gestion</th>
                     </tr>
                     </thead>
+
                     <tbody>
                     {portfolio.length > 0 ? (
                         portfolio.map((asset, index) => (
@@ -276,7 +336,8 @@ const Dashboard = ({ token }) => {
                                 <td>{asset.quantity}</td>
                                 <td>{asset.totalPrice ? asset.totalPrice.toFixed(2) + "€" : "0€"}</td>
                                 <td>
-                                    <button onClick={() => fetchPriceHistory(asset.symbol)}>Voir Évolution</button>
+                                    <button className="view-btn" onClick={() => fetchPriceHistory(asset.symbol)}>Voir Évolution</button>
+
 
                                 </td>
                                 <td>

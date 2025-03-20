@@ -20,7 +20,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url('https://media.istockphoto.com/id/1487894858/fr/photo/graphique-en-chandelier-et-donn%C3%A9es-du-march%C3%A9-financier.jpg?s=612x612&w=0&k=20&c=tJoRghcmr2l10qJflJUkmY1kGjUqjccYGxiBSxRiQFc=')
+    background: url('https://img.freepik.com/photos-premium/fond-noir-clavier-touches-fond-noir_270292-1168.jpg')
     no-repeat center center/cover;
 }
 
@@ -88,16 +88,18 @@ html, body {
     border-radius: 6px;
     font-size: 16px;
     font-weight: 500;
-    color: white;
-    background: linear-gradient(135deg, #ffdd57, #ff9900);
+    color: black;
+    background: white;
     cursor: pointer;
     transition: 0.3s;
 }
 
 .auth-box button:hover {
-    background: linear-gradient(135deg, #ffcc00, #ff6600);
-    box-shadow: 0px 5px 15px rgba(255, 204, 0, 0.5);
+    background: black;
+    color: white;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
+
 
 .auth-link a {
     color: #ffdd57;

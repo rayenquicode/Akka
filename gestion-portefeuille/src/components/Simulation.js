@@ -14,7 +14,7 @@ const Simulation = () => {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-    // Fonction pour récupérer l'historique des prix et faire la prédiction
+    // Fonction pour récupérer l'historique des prix et faire les prévisions
     const fetchPriceHistory = async () => {
         if (!symbol) {
             setError("Veuillez entrer un symbole d'action.");
@@ -51,6 +51,47 @@ const Simulation = () => {
         setLoading(false);
     };
 
+    const chartOptions = {
+        responsive: true,
+        plugins: {
+            legend: {
+                labels: {
+                    color: "white", // 🔥 Mettre les légendes en blanc
+                    font: {
+                        size: 14,
+                        weight: "bold"
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: "white", // 🔥 Rendre les chiffres de l'axe X blancs
+                    font: {
+                        size: 12,
+                        weight: "bold"
+                    }
+                },
+                grid: {
+                    color: "rgba(255, 255, 255, 0.2)" // 🔥 Rendre la grille plus discrète
+                }
+            },
+            y: {
+                ticks: {
+                    color: "white", // 🔥 Rendre les chiffres de l'axe Y blancs
+                    font: {
+                        size: 14,
+                        weight: "bold"
+                    }
+                },
+                grid: {
+                    color: "rgba(255, 255, 255, 0.2)" // 🔥 Atténuer la grille
+                }
+            }
+        }
+    };
+
     // Préparer les données pour le graphique
     const chartData = {
         labels: priceHistory.map(entry => new Date(entry.timestamp).toLocaleDateString()),
@@ -63,10 +104,10 @@ const Simulation = () => {
                 tension: 0.4,
             },
             {
-                label: "Prévisions",
+                label: "Prévisions (Régression Linéaire)",
                 data: predictions.map(entry => entry.price),
-                borderColor: "#FF6384",
-                backgroundColor: "rgba(255, 99, 132, 0.2)",
+                borderColor: "#2ECC71",
+                backgroundColor: "rgba(54, 162, 235, 0.2)",
                 borderDash: [5, 5],
                 tension: 0.4,
             },
@@ -77,7 +118,8 @@ const Simulation = () => {
         <>
             <Header />
             <div className="simulation-container">
-                <h2>📊 Simulation et Prévisions</h2>
+                <h2 className="simulation-title">Simulation</h2>
+
 
                 {error && <p className="error">{error}</p>}
 
