@@ -2,7 +2,7 @@ Guide de lancement du projet
 Prérequis
 Avant de lancer le projet, assurez-vous que :
 
-Les identifiants de connexion (username et password), ainsi que l'URL avec localhost, doivent être correctement configurés dans main.scala pour correspondre à ceux de votre base de données.
+Les identifiants de connexion username et password, ainsi que l'URL avec localhost, doivent être correctement configurés dans main.scala(Lignes 46-48/86-88) pour correspondre à ceux de votre base de données.
 Votre base de données est bien configurée avec les bonnes tables (voir script SQL ci-dessous).
 
 Configuration de la base de données
