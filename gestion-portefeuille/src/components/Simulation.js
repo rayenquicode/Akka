@@ -13,8 +13,9 @@ const Simulation = () => {
     const [predictions, setPredictions] = useState([]);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [investmentScenario, setInvestmentScenario] = useState([]);
+    const [feesImpact, setFeesImpact] = useState([]);
 
-    // Fonction pour récupérer l'historique des prix et faire les prévisions
     const fetchPriceHistory = async () => {
         if (!symbol) {
             setError("Veuillez entrer un symbole d'action.");
@@ -34,7 +35,6 @@ const Simulation = () => {
 
             setPriceHistory(response.data);
 
-            // Appliquer une régression linéaire pour prédire les tendances futures
             const regressionData = response.data.map((entry, index) => [index, entry.price]);
             const result = regression.linear(regressionData);
 
@@ -51,48 +51,25 @@ const Simulation = () => {
         setLoading(false);
     };
 
-    const chartOptions = {
-        responsive: true,
-        plugins: {
-            legend: {
-                labels: {
-                    color: "white", // 🔥 Mettre les légendes en blanc
-                    font: {
-                        size: 14,
-                        weight: "bold"
-                    }
-                }
-            }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: "white", // 🔥 Rendre les chiffres de l'axe X blancs
-                    font: {
-                        size: 12,
-                        weight: "bold"
-                    }
-                },
-                grid: {
-                    color: "rgba(255, 255, 255, 0.2)" // 🔥 Rendre la grille plus discrète
-                }
-            },
-            y: {
-                ticks: {
-                    color: "white", // 🔥 Rendre les chiffres de l'axe Y blancs
-                    font: {
-                        size: 14,
-                        weight: "bold"
-                    }
-                },
-                grid: {
-                    color: "rgba(255, 255, 255, 0.2)" // 🔥 Atténuer la grille
-                }
-            }
-        }
+    const simulateInvestmentScenario = () => {
+        const scenario = priceHistory.map((entry, index) => ({
+            timestamp: entry.timestamp,
+            price: entry.price * (index % 2 === 0 ? 1.05 : 0.95), // Variation de prix pour différenciation
+            action: index % 2 === 0 ? "Achat" : "Vente",
+            quantity: 10
+        }));
+        setInvestmentScenario(scenario);
     };
 
-    // Préparer les données pour le graphique
+    const calculateFeesImpact = () => {
+        const FEE_RATE = 0.02;
+        const feesData = priceHistory.map((entry, index) => ({
+            timestamp: entry.timestamp,
+            price: entry.price * (1 - FEE_RATE * index / priceHistory.length)
+        }));
+        setFeesImpact(feesData);
+    };
+
     const chartData = {
         labels: priceHistory.map(entry => new Date(entry.timestamp).toLocaleDateString()),
         datasets: [
@@ -111,6 +88,22 @@ const Simulation = () => {
                 borderDash: [5, 5],
                 tension: 0.4,
             },
+            {
+                label: "Scénario d'Investissement",
+                data: investmentScenario.map(entry => entry.price),
+                borderColor: "#FF5733",
+                backgroundColor: "rgba(255, 87, 51, 0.2)", // Changement de couleur pour démarquer
+                borderDash: [3, 3],
+                tension: 0.4,
+            },
+            {
+                label: "Impact des Frais",
+                data: feesImpact.map(entry => entry.price),
+                borderColor: "#FFC300",
+                backgroundColor: "rgba(255, 195, 0, 0.2)",
+                borderDash: [4, 4],
+                tension: 0.4,
+            }
         ],
     };
 
@@ -119,7 +112,6 @@ const Simulation = () => {
             <Header />
             <div className="simulation-container">
                 <h2 className="simulation-title">Simulation</h2>
-
 
                 {error && <p className="error">{error}</p>}
 
@@ -132,6 +124,14 @@ const Simulation = () => {
 
                 <button className="simulate-btn" onClick={fetchPriceHistory} disabled={loading}>
                     {loading ? "Simulation en cours..." : "Simuler"}
+                </button>
+
+                <button className="simulate-btn" onClick={simulateInvestmentScenario}>
+                    Simuler Achat/Vente
+                </button>
+
+                <button className="simulate-btn" onClick={calculateFeesImpact}>
+                    Calculer Impact des Frais
                 </button>
 
                 <div className="chart-container">

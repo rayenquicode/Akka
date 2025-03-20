@@ -18,12 +18,12 @@
 .nav-links {
     display: flex;
     align-items: center;
-    justify-content: center; /* Centre les éléments */
-    gap: 50px; /* Espace entre les liens */
+    justify-content: center;
+    gap: 50px;
 }
 
-/* LIENS */
-.nav-link {
+/* LIENS AVEC ANIMATION UNIFORME */
+.nav-link, .logout-link {
     display: flex;
     flex-direction: column; /* Icône au-dessus du texte */
     align-items: center;
@@ -31,38 +31,22 @@
     font-size: 14px;
     font-weight: 500;
     color: white !important;
+    padding: 10px 16px;
+    border: 2px solid white; /* Ajout d'une bordure comme le bouton Déconnexion */
+    border-radius: 8px;
     transition: all 0.3s ease-in-out;
-    padding: 10px;
 }
 
-.nav-link:hover {
-    color: #f8f9fa !important;
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+.nav-link:hover, .logout-link:hover {
+    background-color: white;
+    color: black !important;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 /* ICÔNES AU-DESSUS DES LIENS */
 .icon-top {
     font-size: 22px;
     margin-bottom: 5px;
-}
-
-/* 🔴 DÉCONNEXION */
-.logout-link {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    font-weight: 500;
-    color: white !important;
-    border: 2px solid white;
-    padding: 8px 16px;
-    border-radius: 8px;
-    transition: all 0.3s ease-in-out;
-}
-
-.logout-link:hover {
-    background-color: white;
-    color: black !important;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 /* Icône à gauche de "Déconnexion" */

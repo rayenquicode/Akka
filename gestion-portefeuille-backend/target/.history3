@@ -112,3 +112,56 @@
 1742318305199:CREATE TABLE `users` (
 1742318306206:) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 1742318519607:run
+1742471228105:RUN
+1742471232443:sbt
+1742471234039:run
+1742471609954:import akka.actor.typed._
+1742471610058:import spray.json.DefaultJsonProtocol._
+1742471610129:import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
+1742471610195:import ch.megard.akka.http.cors.scaladsl.model.HttpOriginMatcher
+1742471610254:import akka.http.scaladsl.model.headers.HttpOrigin
+1742471610301:import akka.http.scaladsl.model.HttpMethods
+1742471610364:import ch.megard.akka.http.cors.scaladsl.model.HttpHeaderRange
+1742471610411:import akka.actor.typed.scaladsl._
+1742471610459:import ch.megard.akka.http.cors.scaladsl.model.HttpOriginMatcher
+1742471610527:import akka.http.scaladsl.model.headers.HttpOrigin
+1742471610575:import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
+1742471610617:import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
+1742471610662:import akka.http.scaladsl.model.HttpMethods
+1742471610699:import akka.http.scaladsl.Http
+1742471610750:import akka.http.scaladsl.server.Directives._
+1742471610822:import spray.json._
+1742471610896:import scala.concurrent.{ExecutionContext, Future}
+1742471610942:import akka.http.scaladsl.model.{HttpEntity, StatusCodes}
+1742471610983:import java.sql.{Connection, DriverManager, PreparedStatement, ResultSet}
+1742471611021:import pdi.jwt._
+1742471611065:import sttp.client3._
+1742471611111:import sttp.client3.HttpURLConnectionBackend
+1742471611166:import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+1742471611210:import akka.http.scaladsl.marshalling.ToResponseMarshallable
+1742471611252:import akka.http.scaladsl.unmarshalling.Unmarshaller
+1742471611295:import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
+1742471611341:import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
+1742471611419:import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
+1742471611464:import akka.http.scaladsl.model.HttpMethods
+1742471611548:import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
+1742471611600:import ch.megard.akka.http.cors.scaladsl.model.HttpOriginMatcher
+1742471611642:import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
+1742471611683:import akka.http.scaladsl.model.HttpMethods
+1742471611736:object DatabaseService {
+1742471611950:}
+1742471611996:case class PriceHistoryEntry(price: Double, timestamp: Long)
+1742471612043:case class Portfolio(userId: String, symbol: String, quantity: Int, totalPrice: Double)
+1742471612085:case class AddAssetRequest(symbol: String, quantity: Int)
+1742471612129:case class StockPrice(symbol: String, price: Double, timestamp: Long)
+1742471612173:case class User(username: String, password: String)
+1742471612211:case class LoginResponse(token: String)
+1742471612257:case class MarketData(symbol: String, price: Double, change: Double)
+1742471612303:trait JsonSupport extends DefaultJsonProtocol {
+1742471612685:}
+1742471612733:import scala.concurrent.{ExecutionContext, Future}
+1742471612783:import java.sql.{Connection, DriverManager, PreparedStatement, ResultSet}
+1742471612830:import scala.concurrent.{ExecutionContext, Future}
+1742471612889:import java.sql.{Connection, DriverManager, PreparedStatement, ResultSet}
+1742471612941:object PortfolioRepository {
+1742471653291:run

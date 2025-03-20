@@ -6,16 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d298deab-a5ca-40b9-944f-9eb891624064" name="Changes" comment="Ajout actions portfeuille">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gestion-portefeuille-backend/target/global-logging/sbt-global-log11457820724081139964.log" beforeDir="false" afterPath="$PROJECT_DIR$/gestion-portefeuille-backend/target/global-logging/sbt-global-log11457820724081139964.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gestion-portefeuille-backend/target/streams/compile/packageBin/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/gestion-portefeuille-backend/target/streams/compile/packageBin/_global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gestion-portefeuille/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/gestion-portefeuille/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gestion-portefeuille/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/gestion-portefeuille/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gestion-portefeuille/src/components/Dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/gestion-portefeuille/src/components/Dashboard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gestion-portefeuille/src/components/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/gestion-portefeuille/src/components/Header.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gestion-portefeuille/src/components/Simulation.js" beforeDir="false" afterPath="$PROJECT_DIR$/gestion-portefeuille/src/components/Simulation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gestion-portefeuille/src/components/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/gestion-portefeuille/src/components/dashboard.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gestion-portefeuille/src/components/header.css" beforeDir="false" afterPath="$PROJECT_DIR$/gestion-portefeuille/src/components/header.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gestion-portefeuille/src/components/simulation.css" beforeDir="false" afterPath="$PROJECT_DIR$/gestion-portefeuille/src/components/simulation.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -210,7 +200,8 @@
       <workItem from="1742326225689" duration="8897000" />
       <workItem from="1742385790364" duration="4751000" />
       <workItem from="1742411861495" duration="8121000" />
-      <workItem from="1742423385989" duration="6319000" />
+      <workItem from="1742423385989" duration="6549000" />
+      <workItem from="1742463587870" duration="11684000" />
     </task>
     <task id="LOCAL-00001" summary="Nouveaux back">
       <created>1741800952508</created>

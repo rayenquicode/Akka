@@ -9,6 +9,8 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointE
 
 const API_URL = "http://localhost:9000";
 
+
+
 const Dashboard = ({ token }) => {
     const [totalInvested, setTotalInvested] = useState(0);
     const [selectedSymbol, setSelectedSymbol] = useState(null);
@@ -21,6 +23,8 @@ const Dashboard = ({ token }) => {
     const [error, setError] = useState("");
     const [username, setUsername] = useState("");
     const [quantityToRemove, setQuantityToRemove] = useState({});
+    const [userMessage, setUserMessage] = useState("");
+    const [chatHistory, setChatHistory] = useState([]);
 
     useEffect(() => {
         if (!token) {

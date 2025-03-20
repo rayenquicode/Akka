@@ -1,0 +1,145 @@
+/* ✅ Réinitialisation et styles globaux */
+* {
+    font-family: "Inter", sans-serif !important;
+}
+
+body {
+    background: url('https://img.freepik.com/photos-premium/fond-noir-clavier-touches-fond-noir_270292-1168.jpg') no-repeat center center fixed;
+    background-size: cover;
+    overflow-x: hidden;
+    color: white;
+    position: relative;
+}
+
+/* ✅ Style global du chatbot */
+.chatbot-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: calc(100vh - 70px); /* Assure que le chatbot ne touche pas le header */
+    padding: 20px;
+    background: rgba(20, 20, 30, 0.8); /* Fond semi-transparent */
+    backdrop-filter: blur(6px);
+    border-radius: 15px;
+    box-shadow: 0px 8px 16px rgba(255, 255, 255, 0.1);
+    text-align: center;
+    margin-top: 80px; /* Espacement pour ne pas être collé au header */
+    transition: transform 0.3s ease-in-out;
+}
+
+/* ✅ Animation du chatbot */
+.chatbot-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 10px 30px rgba(255, 255, 255, 0.12);
+}
+
+/* ✅ Conteneur des messages */
+.chatbox {
+    width: 90%;
+    max-width: 600px;
+    height: 70vh;
+    overflow-y: auto;
+    border-radius: 10px;
+    padding: 15px;
+    background: rgba(20, 20, 30, 0.8); /* Fond semi-transparent */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* ✅ Style des messages */
+.message {
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+    color: white;
+}
+
+/* ✅ Message utilisateur */
+.user {
+    align-self: flex-end;
+    background-color: #4caf50; /* Couleur verte */
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* ✅ Message du chatbot */
+.bot {
+    align-self: flex-start;
+    background-color: #009688; /* Couleur bleue pour le chatbot */
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* ✅ Zone de saisie */
+.input-area {
+    display: flex;
+    width: 90%;
+    max-width: 600px;
+    margin-top: 10px;
+}
+
+/* ✅ Champ de texte */
+input {
+    flex-grow: 1;
+    padding: 12px;
+    margin: 15px 0;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    transition: background 0.3s ease-in-out, border-color 0.3s;
+}
+
+input:focus {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid white;
+    outline: none;
+}
+
+/* ✅ Bouton envoyer (ajusté pour cohérence de couleur) */
+button {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    background: transparent; /* Transparent pour correspondre au design */
+    color: white; /* Texte en blanc */
+    border: 2px solid white; /* Bordure blanche */
+    transition: all 0.3s ease-in-out;
+}
+
+/* ✅ Bouton avec une couleur cohérente avec ton header */
+button:hover {
+    background: rgba(255, 255, 255, 0.2); /* Bouton légèrement clair au survol */
+}
+
+/* ✅ Bouton désactivé */
+button:disabled {
+    background: rgba(255, 255, 255, 0.2);
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* ✅ Style d'erreur */
+.error {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* ✅ Animation au rendu */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -5,23 +5,31 @@ import './auth.css';
 
 const API_URL = 'http://localhost:9000';
 
-const Login = () => {
+const Login = ({ setToken }) => { // ✅ Ajout de setToken pour mettre à jour l'état global
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // ✅ Pour rediriger après connexion
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setError('');
+
         try {
             localStorage.removeItem("token");
             sessionStorage.clear();
 
             const response = await axios.post(`${API_URL}/login`, { username, password });
-            localStorage.setItem("token", response.data.token);
-            navigate("/dashboard");
+
+            if (response.data.token) {
+                localStorage.setItem("token", response.data.token);
+                setToken(response.data.token); // ✅ Mettre à jour le token global
+                navigate('/dashboard'); // ✅ Rediriger après connexion
+            } else {
+                setError("Identifiants incorrects, veuillez réessayer.");
+            }
         } catch (error) {
-            setError("Identifiants incorrects, veuillez réessayer.");
+            setError("Erreur de connexion. Vérifiez vos identifiants.");
         }
     };
 
@@ -36,8 +44,6 @@ const Login = () => {
                 <form onSubmit={handleLogin}>
                     <input
                         type="text"
-                        id="username"
-                        name="username"
                         placeholder="Nom d'utilisateur"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
@@ -45,8 +51,6 @@ const Login = () => {
                     />
                     <input
                         type="password"
-                        id="password"
-                        name="password"
                         placeholder="Mot de passe"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
