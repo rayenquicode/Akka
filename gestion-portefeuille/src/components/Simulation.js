@@ -54,7 +54,7 @@ const Simulation = () => {
     const simulateInvestmentScenario = () => {
         const scenario = priceHistory.map((entry, index) => ({
             timestamp: entry.timestamp,
-            price: entry.price * (index % 2 === 0 ? 1.05 : 0.95), // Variation de prix pour différenciation
+            price: entry.price * (index % 2 === 0 ? 1.05 : 0.95),
             action: index % 2 === 0 ? "Achat" : "Vente",
             quantity: 10
         }));
@@ -92,7 +92,7 @@ const Simulation = () => {
                 label: "Scénario d'Investissement",
                 data: investmentScenario.map(entry => entry.price),
                 borderColor: "#FF5733",
-                backgroundColor: "rgba(255, 87, 51, 0.2)", // Changement de couleur pour démarquer
+                backgroundColor: "rgba(255, 87, 51, 0.2)",
                 borderDash: [3, 3],
                 tension: 0.4,
             },

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Navbar, Nav, Container } from "react-bootstrap";
-import { FaHome, FaLaptopCode, FaRobot, FaSignOutAlt } from "react-icons/fa"; // Ajout de l'icône Chatbot
+import { FaHome, FaLaptopCode, FaRobot, FaSignOutAlt } from "react-icons/fa";
 import { FaChartLine } from "react-icons/fa";
 import "./header.css";
 

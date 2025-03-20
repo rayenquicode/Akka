@@ -69,14 +69,14 @@ const Dashboard = ({ token }) => {
             return; // Évite d'appeler l'API avec undefined
         }
 
-        console.log("🟢 [DEBUG] Appel API total-invested avec :", username);  // 🔥 Vérification
+        console.log("Appel API total-invested avec :", username);  // 🔥 Vérification
 
         try {
             const response = await axios.get(`${API_URL}/portfolio/${username}/total-invested`);
-            console.log("🟢 [DEBUG] Total investi récupéré :", response.data.totalInvested); // 🔥 Debug
+            console.log("Total investi récupéré :", response.data.totalInvested); // 🔥 Debug
             setTotalInvested(response.data.totalInvested);
         } catch (error) {
-            console.error("❌ Erreur lors du chargement du total investi :", error);
+            console.error(" Erreur lors du chargement du total investi :", error);
         }
     };
 
@@ -109,7 +109,7 @@ const Dashboard = ({ token }) => {
             });
 
             setPortfolio(response.data);
-            fetchMarketData(response.data); // ✅ Mise à jour du marché après mise à jour du portefeuille
+            fetchMarketData(response.data);
         } catch (error) {
             setError("Erreur lors du chargement du portefeuille.");
         }
@@ -154,7 +154,7 @@ const Dashboard = ({ token }) => {
         try {
             await axios.post(`${API_URL}/portfolio/${username}/add`, { symbol, quantity: parseInt(quantity) });
             await fetchPortfolio(username);
-            await fetchTotalInvested(username); // 🔥 Met à jour immédiatement après ajout
+            await fetchTotalInvested(username);
 
             setMessage(`Action ${symbol} ajoutée avec succès !`);
             setSymbol("");
@@ -179,8 +179,8 @@ const Dashboard = ({ token }) => {
         try {
             await axios.post(`${API_URL}/portfolio/${username}/remove`, { symbol, quantity });
 
-            await fetchPortfolio(username); // ✅ Mise à jour du portefeuille
-            await fetchTotalInvested(username); // 🔥 Mise à jour immédiate du total investi
+            await fetchPortfolio(username);
+            await fetchTotalInvested(username);
 
             setMessage(`Action ${symbol} retirée avec succès.`);
             console.log("🔍 Vérification après suppression :", portfolio);
@@ -189,12 +189,6 @@ const Dashboard = ({ token }) => {
             setError("Erreur lors de la suppression de l'action.");
         }
     };
-
-
-
-
-
-
 
 
 
@@ -212,12 +206,12 @@ const Dashboard = ({ token }) => {
         ],
     };
 
-// ✅ Définit les options du Pie Chart séparément
+
     const pieChartOptions = {
         plugins: {
             legend: {
                 labels: {
-                    color: "white", // 🔥 Mettre le texte des légendes en blanc
+                    color: "white",
                     font: {
                         size: 14,
                         weight: "bold"
@@ -233,7 +227,7 @@ const Dashboard = ({ token }) => {
         plugins: {
             legend: {
                 labels: {
-                    color: "white", // 🔥 Rendre la légende plus visible
+                    color: "white",
                     font: {
                         size: 14,
                         weight: "bold"
@@ -244,26 +238,26 @@ const Dashboard = ({ token }) => {
         scales: {
             x: {
                 ticks: {
-                    color: "white", // 🔥 Couleur blanche pour les valeurs de l'axe X
+                    color: "white",
                     font: {
                         size: 12,
                         weight: "bold"
                     }
                 },
                 grid: {
-                    color: "rgba(255, 255, 255, 0.2)" // 🔥 Grille plus discrète
+                    color: "rgba(255, 255, 255, 0.2)"
                 }
             },
             y: {
                 ticks: {
-                    color: "white", // 🔥 Couleur blanche pour les valeurs de l'axe Y
+                    color: "white",
                     font: {
                         size: 14,
                         weight: "bold"
                     }
                 },
                 grid: {
-                    color: "rgba(255, 255, 255, 0.2)" // 🔥 Atténuer la grille
+                    color: "rgba(255, 255, 255, 0.2)"
                 }
             }
         }
@@ -271,10 +265,10 @@ const Dashboard = ({ token }) => {
 
 
     const marketChartData = priceHistory.length > 0 ? {
-        labels: priceHistory.map(entry => new Date(entry.timestamp).toLocaleDateString()), // ✅ Affichage correct des dates
+        labels: priceHistory.map(entry => new Date(entry.timestamp).toLocaleDateString()),
         datasets: [
             {
-                label: `Fluctuation du prix`, // ✅ Correction du label
+                label: `Fluctuation du prix`,
                 data: priceHistory.map(entry => entry.price),
                 borderColor: "#00BCD4",
                 fill: false,

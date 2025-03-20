@@ -1,20 +1,20 @@
-/* 🌑 HEADER FOND NOIR */
+
 .custom-navbar {
     background-color: #111 !important;
     padding: 15px;
 }
 
-/* LOGO COLLÉ À GAUCHE */
+
 .logo {
     font-size: 24px;
     font-weight: bold;
     text-transform: uppercase;
     color: white;
     letter-spacing: 2px;
-    margin-left: 0; /* SUPPRESSION DES MARGES */
+    margin-left: 0;
 }
 
-/* CENTRAGE DE LA NAVIGATION */
+
 .nav-links {
     display: flex;
     align-items: center;
@@ -22,17 +22,17 @@
     gap: 50px;
 }
 
-/* LIENS AVEC ANIMATION UNIFORME */
+
 .nav-link, .logout-link {
     display: flex;
-    flex-direction: column; /* Icône au-dessus du texte */
+    flex-direction: column;
     align-items: center;
     text-align: center;
     font-size: 14px;
     font-weight: 500;
     color: white !important;
     padding: 10px 16px;
-    border: 2px solid white; /* Ajout d'une bordure comme le bouton Déconnexion */
+    border: 2px solid white;
     border-radius: 8px;
     transition: all 0.3s ease-in-out;
 }
@@ -43,19 +43,19 @@
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
-/* ICÔNES AU-DESSUS DES LIENS */
+
 .icon-top {
     font-size: 22px;
     margin-bottom: 5px;
 }
 
-/* Icône à gauche de "Déconnexion" */
+
 .icon-left {
     font-size: 18px;
     margin-right: 8px;
 }
 
-/* RESPONSIVE */
+
 @media (max-width: 768px) {
     .nav-links {
         flex-direction: column;

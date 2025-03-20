@@ -1,4 +1,4 @@
-/* ✅ Réinitialisation et styles globaux */
+
 * {
     font-family: "Inter", sans-serif !important;
 }
@@ -11,11 +11,11 @@ body {
     position: relative;
 }
 
-/* ✅ Ajout d'un fond semi-transparent */
+
 .simulation-container {
     width: 50%;
     margin: 120px auto 40px;
-    background: rgba(20, 20, 30, 0.8); /* Fond semi-transparent */
+    background: rgba(20, 20, 30, 0.8);
     backdrop-filter: blur(6px);
     padding: 30px;
     border-radius: 15px;
@@ -24,7 +24,7 @@ body {
     transition: transform 0.3s ease-in-out;
 }
 
-/* ✅ Appliquer la même police et le même style que le Dashboard */
+
 .simulation-title {
     font-family: "Inter", sans-serif !important;
     font-size: 28px;
@@ -41,7 +41,7 @@ body {
     box-shadow: 0px 10px 30px rgba(255, 255, 255, 0.12);
 }
 
-/* ✅ Harmonisation des titres */
+
 h2 {
     color: white;
     font-size: 24px;
@@ -80,7 +80,7 @@ button:hover,
 }
 
 
-/* ✅ Effet de clic */
+
 button:active,
 .add-btn:active,
 .remove-btn:active,
@@ -90,7 +90,7 @@ button:active,
     box-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
 }
 
-/* ✅ Désactivation du bouton */
+
 button:disabled,
 .simulate-btn:disabled {
     background: rgba(255, 255, 255, 0.2);
@@ -101,7 +101,7 @@ button:disabled,
 }
 
 
-/* ✅ Harmonisation des champs de saisie */
+
 input {
     width: 100%;
     padding: 12px;
@@ -121,7 +121,7 @@ input:focus {
     outline: none;
 }
 
-/* ✅ Harmonisation des boutons */
+
 .simulate-btn {
     width: 100%;
     padding: 12px;
@@ -140,21 +140,21 @@ input:focus {
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* ✅ Désactivation du bouton */
+
 .simulate-btn:disabled {
     background: rgba(255, 255, 255, 0.2);
     opacity: 0.7;
     cursor: not-allowed;
 }
 
-/* ✅ Harmonisation des erreurs */
+
 .error {
     color: red;
     font-size: 14px;
     margin-top: 10px;
 }
 
-/* ✅ Conteneur du graphique */
+
 .chart-container {
     margin-top: 30px;
     background: rgba(255, 255, 255, 0.9);
@@ -163,7 +163,7 @@ input:focus {
     box-shadow: 0px 4px 12px rgba(255, 255, 255, 0.1);
 }
 
-/* ✅ Animation au rendu */
+
 @keyframes fadeIn {
     from {
         opacity: 0;

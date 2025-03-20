@@ -5,11 +5,11 @@ import './auth.css';
 
 const API_URL = 'http://localhost:9000';
 
-const Login = ({ setToken }) => { // ✅ Ajout de setToken pour mettre à jour l'état global
+const Login = ({ setToken }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate(); // ✅ Pour rediriger après connexion
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -23,8 +23,8 @@ const Login = ({ setToken }) => { // ✅ Ajout de setToken pour mettre à jour l
 
             if (response.data.token) {
                 localStorage.setItem("token", response.data.token);
-                setToken(response.data.token); // ✅ Mettre à jour le token global
-                navigate('/dashboard'); // ✅ Rediriger après connexion
+                setToken(response.data.token);
+                navigate('/dashboard');
             } else {
                 setError("Identifiants incorrects, veuillez réessayer.");
             }

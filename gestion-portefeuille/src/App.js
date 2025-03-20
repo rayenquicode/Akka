@@ -10,15 +10,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
     const [token, setToken] = useState(localStorage.getItem('token'));
-    const location = useLocation(); // ✅ Permet de savoir où l'on est
+    const location = useLocation();
 
     useEffect(() => {
-        setToken(localStorage.getItem('token')); // ✅ Mettre à jour le token s'il change
-    }, [location]); // ✅ Re-vérifie le token à chaque changement de page
+        setToken(localStorage.getItem('token'));
+    }, [location]);
 
     return (
         <>
-            {/* ✅ Afficher le Header SEULEMENT si on n'est PAS sur Login/Register */}
+
             {token && location.pathname !== "/login" && location.pathname !== "/register" && <Header />}
 
             <div>

@@ -7,9 +7,9 @@ const Chatbot = () => {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
 
-    // Fonction pour envoyer un message et recevoir une réponse
+
     const sendMessage = async () => {
-        if (!input.trim()) return;  // Eviter l'envoi de message vide
+        if (!input.trim()) return;
 
         const userMessage = { text: input, sender: "user" };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
