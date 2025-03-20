@@ -196,7 +196,7 @@ input:focus {
     color: #333;
     font-size: 16px;
     box-sizing: border-box;
-/ margin-bottom: 15 px;
+ margin-bottom: 15px;
     transition: border-color 0.3s ease-in-out;
 
 }

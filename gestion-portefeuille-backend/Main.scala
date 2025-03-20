@@ -1,13 +1,13 @@
 import akka.actor.typed._
-
-
+import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Route
+import scala.concurrent.ExecutionContext
 import spray.json.DefaultJsonProtocol._
 import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
 import ch.megard.akka.http.cors.scaladsl.model.HttpOriginMatcher
 import akka.http.scaladsl.model.headers.HttpOrigin
 import akka.http.scaladsl.model.HttpMethods
 import ch.megard.akka.http.cors.scaladsl.model.HttpHeaderRange
-
 import akka.actor.typed.scaladsl._
 import ch.megard.akka.http.cors.scaladsl.model.HttpOriginMatcher
 import akka.http.scaladsl.model.headers.HttpOrigin
@@ -35,6 +35,11 @@ import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
 import ch.megard.akka.http.cors.scaladsl.model.HttpOriginMatcher
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 import akka.http.scaladsl.model.HttpMethods
+import scala.collection.mutable
+import scala.concurrent.duration._
+import scala.concurrent.{ExecutionContext, Future}
+import java.time.Instant
+
 
 
 object DatabaseService {
@@ -71,51 +76,69 @@ import java.sql.{Connection, DriverManager, PreparedStatement, ResultSet}
 import scala.concurrent.{ExecutionContext, Future}
 import java.sql.{Connection, DriverManager, PreparedStatement, ResultSet}
 
+import scala.concurrent.{ExecutionContext, Future}
+import java.sql.{Connection, DriverManager, PreparedStatement, ResultSet}
+import scala.concurrent.Await
+import scala.concurrent.duration._
+
 object PortfolioRepository {
-  // ✅ Fonction pour obtenir la connexion à la base de données
   def getConnection: Connection = {
     val url = "jdbc:mysql://localhost:3306/portefeuille"
     val user = "root"
     val password = "cytech0001"
     DriverManager.getConnection(url, user, password)
   }
-
-  // ✅ Fonction pour récupérer le total investi dans le portefeuille de l'utilisateur
   def getTotalInvested(userId: String): Future[Double] = Future {
     val conn = getConnection
-    val stmt = conn.prepareStatement("SELECT SUM(total_price) FROM portfolios WHERE user_id = ?")
+    val stmt = conn.prepareStatement("SELECT symbol, quantity FROM portfolios WHERE user_id = ?")
     stmt.setString(1, userId)
     val rs = stmt.executeQuery()
 
-    val totalInvested = if (rs.next()) rs.getDouble(1) else 0.0
-    println(s"🟢 [DEBUG] Total investi pour $userId : $totalInvested")
-    println(s"🟢 [DEBUG] Total investi récupéré pour $userId : $totalInvested €") // 🔥 Debug
+    // Récupération de tous les actifs détenus par l'utilisateur
+    val assets = Iterator.continually((rs.next(), rs)).takeWhile(_._1).map { case (_, row) =>
+      val symbol = row.getString("symbol")
+      val quantity = row.getInt("quantity")
+      (symbol, quantity)
+    }.toList
 
     rs.close()
     stmt.close()
     conn.close()
+
+    // Calculer la valeur totale des actifs en fonction des PRIX ACTUELS
+    val totalInvested = assets.map { case (symbol, quantity) =>
+      val marketData = Await.result(FinnhubService.fetchStockPrice(symbol), 5.seconds)
+      marketData.price * quantity
+    }.sum
+
+    println(s" [DEBUG] Total investi CALCULÉ avec PRIX ACTUELS pour $userId : $totalInvested €")
     totalInvested
   }(ExecutionContext.global)
 
-  // ✅ Fonction pour ajouter un actif au portefeuille
   def addAsset(portfolio: Portfolio): Future[Int] = Future {
     val conn = getConnection
+
+    // Récupérer le prix actuel via Finnhub
+    val currentPrice = Await.result(FinnhubService.fetchStockPrice(portfolio.symbol), 5.seconds).price
+    val totalPrice = currentPrice * portfolio.quantity
+
     val stmt = conn.prepareStatement(
       """
         INSERT INTO portfolios (user_id, symbol, quantity, total_price)
         VALUES (?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE
             quantity = quantity + VALUES(quantity),
-            total_price = total_price + VALUES(total_price)
+            total_price = quantity * ?
       """
     )
 
     stmt.setString(1, portfolio.userId)
     stmt.setString(2, portfolio.symbol)
     stmt.setInt(3, portfolio.quantity)
-    stmt.setDouble(4, portfolio.totalPrice)
+    stmt.setDouble(4, totalPrice)
+    stmt.setDouble(5, currentPrice)
 
-    println(s"🟢 [DEBUG] Ajout de ${portfolio.quantity}x ${portfolio.symbol} pour ${portfolio.totalPrice} €") // 🔥 Debug
+    println(s" [DEBUG] Ajout de ${portfolio.quantity}x ${portfolio.symbol} au prix actuel de $currentPrice €")
 
     val result = stmt.executeUpdate()
     stmt.close()
@@ -123,53 +146,58 @@ object PortfolioRepository {
     result
   }(ExecutionContext.global)
 
-  // ✅ Fonction pour récupérer le portefeuille d'un utilisateur
+  // Récupérer le portefeuille avec VALEURS ACTUALISÉES
   def getPortfolio(userId: String): Future[List[Portfolio]] = Future {
     val conn = getConnection
-    val stmt = conn.prepareStatement("SELECT * FROM portfolios WHERE user_id = ?")
+    val stmt = conn.prepareStatement("SELECT symbol, quantity FROM portfolios WHERE user_id = ?")
     stmt.setString(1, userId)
     val rs = stmt.executeQuery()
 
-    val results = Iterator.continually((rs.next(), rs)).takeWhile(_._1).map { case (_, row) =>
-      Portfolio(
-        row.getString("user_id"),
-        row.getString("symbol"),
-        row.getInt("quantity"),
-        row.getDouble("total_price")
-      )
+    val assets = Iterator.continually((rs.next(), rs)).takeWhile(_._1).map { case (_, row) =>
+      val symbol = row.getString("symbol")
+      val quantity = row.getInt("quantity")
+      (symbol, quantity)
     }.toList
-
-    println(s"🟢 [DEBUG] Portefeuille récupéré pour $userId : $results") // 🔥 Debug
 
     rs.close()
     stmt.close()
     conn.close()
-    results
+
+    // Récupération des prix ACTUELS pour recalculer la valeur totale
+    val updatedAssets = assets.map { case (symbol, quantity) =>
+      val marketData = Await.result(FinnhubService.fetchStockPrice(symbol), 5.seconds)
+      Portfolio(userId, symbol, quantity, marketData.price * quantity)
+    }
+
+    println(s" [DEBUG] Portefeuille récupéré avec prix ACTUALISÉS pour $userId : $updatedAssets")
+    updatedAssets
   }(ExecutionContext.global)
 
-  // ✅ Fonction pour retirer un actif du portefeuille
+  //Retirer un actif en recalculant avec le prix ACTUEL
   def removeAsset(portfolio: Portfolio): Future[Int] = Future {
     val conn = getConnection
+
+    // Récupérer le prix actuel via Finnhub
+    val currentPrice = Await.result(FinnhubService.fetchStockPrice(portfolio.symbol), 5.seconds).price
+    val amountToRemove = currentPrice * portfolio.quantity
+
     val stmt = conn.prepareStatement(
       """
           UPDATE portfolios
           SET quantity = quantity - ?,
-              total_price = total_price - (? * (SELECT price FROM price_history WHERE symbol = ? ORDER BY timestamp DESC LIMIT 1))
+              total_price = quantity * ?
           WHERE user_id = ? AND symbol = ? AND quantity >= ?
       """
     )
     stmt.setInt(1, portfolio.quantity)
-    stmt.setDouble(2, portfolio.quantity.toDouble)
-    stmt.setString(3, portfolio.symbol)
-    stmt.setString(4, portfolio.userId)
-    stmt.setString(5, portfolio.symbol)
-    stmt.setInt(6, portfolio.quantity)
+    stmt.setDouble(2, currentPrice)
+    stmt.setString(3, portfolio.userId)
+    stmt.setString(4, portfolio.symbol)
+    stmt.setInt(5, portfolio.quantity)
 
-    println(s"🟢 [DEBUG] Retrait de ${portfolio.quantity}x ${portfolio.symbol} pour l'utilisateur ${portfolio.userId}") // 🔥 Debug
+    println(s"[DEBUG] Retrait de ${portfolio.quantity}x ${portfolio.symbol} au prix actuel de $currentPrice €")
 
     val result = stmt.executeUpdate()
-
-    // ✅ Correction : Si quantité = 0, forcer `total_price` à 0 mais NE PAS SUPPRIMER
     val resetStmt = conn.prepareStatement(
       """
           UPDATE portfolios
@@ -217,7 +245,7 @@ object AuthRepository {
   import java.time.Clock
 
   def authenticateUser(username: String, password: String)(implicit ec: ExecutionContext): Future[Option[String]] = Future {
-    implicit val clock: Clock = Clock.systemUTC() // ✅ Ajout de Clock
+    implicit val clock: Clock = Clock.systemUTC()
 
     var conn: Connection = null
     var stmt: PreparedStatement = null
@@ -234,7 +262,7 @@ object AuthRepository {
         if (password == storedPassword) {
           val claim = JwtClaim(
             s"""{"username": "$username", "timestamp": ${System.currentTimeMillis()}}"""
-          ).issuedNow.expiresIn(3600) // ✅ Expiration du token en 1h avec Clock
+          ).issuedNow.expiresIn(3600)
 
           Some(Jwt.encode(claim, "secretKey", JwtAlgorithm.HS256))
         } else {
@@ -245,7 +273,7 @@ object AuthRepository {
       }
     } catch {
       case ex: Exception =>
-        println(s"❌ Erreur lors de l'authentification de $username : ${ex.getMessage}")
+        println(s"Erreur lors de l'authentification de $username : ${ex.getMessage}")
         None
     } finally {
       if (rs != null) rs.close()
@@ -260,33 +288,82 @@ object FinnhubService {
   implicit val backend: SttpBackend[Identity, Any] = HttpURLConnectionBackend()
 
   def fetchStockPrice(symbol: String): Future[MarketData] = Future {
-    val request = basicRequest.get(uri"https://finnhub.io/api/v1/quote?symbol=$symbol&token=$apiKey")
-    val response = request.send(backend)
+    MarketCache.get(symbol) match {
+      case Some(price) =>
+        MarketData(symbol, price, 0.0) // Retourne le prix en cache
 
-    response.body match {
-      case Right(body) =>
-        val json = body.parseJson.asJsObject
-        MarketData(
-          symbol,
-          json.fields.get("c").flatMap(_.convertTo[Option[Double]]).getOrElse(0.0), // ✅ Conversion robuste
-          json.fields.get("d").flatMap(_.convertTo[Option[Double]]).getOrElse(0.0)  // ✅ Conversion robuste
-        )
-      case Left(error) =>
-        println(s"❌ Erreur API Finnhub : $error")
-        throw new Exception(s"Erreur API Finnhub: $error")
+      case None =>
+        val request = basicRequest.get(uri"https://finnhub.io/api/v1/quote?symbol=$symbol&token=$apiKey")
+        val response = request.send(backend)
+
+        response.body match {
+          case Right(body) =>
+            val json = body.parseJson.asJsObject
+            val currentPrice = json.fields.get("c").flatMap(_.convertTo[Option[Double]]).getOrElse(0.0)
+
+            val conn = DatabaseService.getConnection
+
+            //Récupère les valeurs précédentes triées par timestamp DESC
+            val historyStmt = conn.prepareStatement(
+              """
+              SELECT price FROM price_history
+              WHERE symbol = ?
+              ORDER BY timestamp DESC
+              """
+            )
+            historyStmt.setString(1, symbol)
+            val historyRs = historyStmt.executeQuery()
+
+            var lastDifferentPrice = currentPrice
+            var foundDifferentPrice = false
+
+            while (historyRs.next() && !foundDifferentPrice) {
+              val prevPrice = historyRs.getDouble("price")
+              if (prevPrice != currentPrice) {
+                lastDifferentPrice = prevPrice
+                foundDifferentPrice = true
+              }
+            }
+
+            historyRs.close()
+            historyStmt.close()
+
+            val priceChangePercent = if (lastDifferentPrice > 0) ((currentPrice - lastDifferentPrice) / lastDifferentPrice) * 100 else 0.0
+
+            // Ajoute la nouvelle valeur dans l'historique **seulement si différente**
+            if (currentPrice != lastDifferentPrice) {
+              val insertStmt = conn.prepareStatement(
+                "INSERT INTO price_history (symbol, price, timestamp) VALUES (?, ?, NOW())"
+              )
+              insertStmt.setString(1, symbol)
+              insertStmt.setDouble(2, currentPrice)
+              insertStmt.executeUpdate()
+              insertStmt.close()
+            }
+
+            conn.close()
+
+            //Stocke en cache pour éviter trop d'appels API
+            MarketCache.set(symbol, currentPrice)
+
+            println(s"[API] Prix actuel pour $symbol: $currentPrice€, Dernière valeur différente: $lastDifferentPrice€, Évolution: $priceChangePercent%")
+
+            MarketData(symbol, currentPrice, priceChangePercent)
+
+          case Left(error) =>
+            println(s"[API ERROR] Erreur Finnhub: $error")
+            throw new Exception(s"Erreur API Finnhub: $error")
+        }
     }
   }(ExecutionContext.global)
 }
-import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.Route
-import scala.concurrent.ExecutionContext
 
 object PortfolioRoutes extends JsonSupport {
   implicit val ec: ExecutionContext = ExecutionContext.global
 
   def routes: Route =
     concat(
-      // ✅ Route pour voir le portefeuille d'un utilisateur
+      //Route pour voir le portefeuille d'un utilisateur
       path("portfolio" / Segment) { userId =>
         get {
           onSuccess(PortfolioRepository.getPortfolio(userId)) { result =>
@@ -295,18 +372,18 @@ object PortfolioRoutes extends JsonSupport {
         }
       },
 
-      // ✅ Route pour obtenir le total investi
+      //Route pour obtenir le total investi
       path("portfolio" / Segment / "total-invested") { userId =>
-        println(s"🟢 [DEBUG] API total-invested appelée avec userId: $userId") // 🔥 Debug
+        println(s"[DEBUG] API total-invested appelée avec userId: $userId")
         get {
           onSuccess(PortfolioRepository.getTotalInvested(userId)) { total =>
-            println(s"🟢 [DEBUG] Total investi récupéré pour $userId : $total €") // 🔥 Debug
+            println(s"[DEBUG] Total investi récupéré pour $userId : $total €")
             complete(Map("totalInvested" -> total).toJson)
           }
         }
       },
 
-      // ✅ Route pour ajouter un actif avec le prix mis à jour
+      // Route pour ajouter un actif avec le prix mis à jour
       path("portfolio" / Segment / "add") { userId =>
         post {
           entity(as[AddAssetRequest]) { assetRequest =>
@@ -325,7 +402,7 @@ object PortfolioRoutes extends JsonSupport {
         }
       },
 
-      // ✅ Route pour supprimer un actif avec mise à jour du total_price
+      //Route pour supprimer un actif avec mise à jour du total_price
       path("portfolio" / Segment / "remove") { userId =>
         post {
           entity(as[AddAssetRequest]) { assetRequest =>
@@ -342,20 +419,26 @@ object PortfolioRoutes extends JsonSupport {
 import scala.collection.mutable
 
 object MarketCache {
-  private val cache = mutable.Map[String, MarketData]()
-  private val expiration = 60 * 1000 // 60 secondes de cache
+  private val cache = mutable.Map[String, (Double, Instant)]()
+  private val cacheDuration = 5.minutes //Durée du cache (5 minutes)
 
-  def get(symbol: String): Option[MarketData] = cache.get(symbol)
+  // Vérifie si l'action est dans le cache et encore valide
+  def get(symbol: String): Option[Double] = {
+    cache.get(symbol) match {
+      case Some((price, timestamp)) if Instant.now().isBefore(timestamp.plusSeconds(cacheDuration.toSeconds)) =>
+        println(s"[CACHE] Prix récupéré pour $symbol : $price €")
+        Some(price) // Retourne le prix en cache
+      case _ =>
+        None
+    }
+  }
 
-  def set(symbol: String, data: MarketData): Unit = {
-    cache.update(symbol, data)
-    Future {
-      Thread.sleep(expiration)
-      cache.remove(symbol)
-    }(ExecutionContext.global)
+  //Stocke un prix dans le cache avec un timestamp actuel
+  def set(symbol: String, price: Double): Unit = {
+    cache.update(symbol, (price, Instant.now()))
+    println(s"[CACHE] Prix stocké pour $symbol : $price € (cache valide 5 min)")
   }
 }
-
 object MarketRoutes extends JsonSupport {
   import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 
@@ -387,8 +470,8 @@ object MarketRoutes extends JsonSupport {
             .takeWhile(_._1)
             .map { case (_, row) =>
               val price = row.getDouble("price")
-              val timestamp = row.getTimestamp("timestamp").getTime // ✅ Assurer un format correct
-              println(s"📊 [DEBUG] Prix: $price, Timestamp: $timestamp") // ✅ Log des valeurs renvoyées
+              val timestamp = row.getTimestamp("timestamp").getTime
+              println(s"[DEBUG] Prix: $price, Timestamp: $timestamp")
               PriceHistoryEntry(price, timestamp)
             }.toList
 
@@ -396,11 +479,10 @@ object MarketRoutes extends JsonSupport {
           stmt.close()
           conn.close()
 
-          complete(history)  // ✅ Envoie directement la liste JSON sérialisable
+          complete(history)
         }
       },
 
-      // ✅ Correction de la route "price-fluctuation" qui était mal placée
       path("price-fluctuation" / Segment) { symbol =>
         get {
           val query = "SELECT price, UNIX_TIMESTAMP(timestamp) * 1000 as timestamp FROM price_history WHERE symbol = ? ORDER BY timestamp ASC"
@@ -413,8 +495,8 @@ object MarketRoutes extends JsonSupport {
             .takeWhile(_._1)
             .map { case (_, row) =>
               val price = row.getDouble("price")
-              val timestamp = row.getLong("timestamp") // ✅ Conversion propre en `Long`
-              println(s"📊 [DEBUG] Prix: $price, Timestamp: $timestamp")
+              val timestamp = row.getLong("timestamp") // Conversion en `Long`
+              println(s"[DEBUG] Prix: $price, Timestamp: $timestamp")
               PriceHistoryEntry(price, timestamp)
             }.toList
 
@@ -422,26 +504,16 @@ object MarketRoutes extends JsonSupport {
           stmt.close()
           conn.close()
 
-          // 🔥 Ajoute le prix actuel via Finnhub API
+          //Ajoute le prix actuel via Finnhub API
           onSuccess(FinnhubService.fetchStockPrice(symbol)) { currentPrice =>
             val updatedHistory = history :+ PriceHistoryEntry(currentPrice.price, System.currentTimeMillis())
-            println(s"📊 [DEBUG] Données finales envoyées au frontend: $updatedHistory")
+            println(s"[DEBUG] Données finales envoyées au frontend: $updatedHistory")
             complete(updatedHistory)
           }
         }
       }
     )
 }
-
-
-
-
-
-
-
-
-
-
 
 object AuthRoutes extends JsonSupport {
   def routes(implicit ec: ExecutionContext): akka.http.scaladsl.server.Route =
@@ -469,13 +541,13 @@ object AuthRoutes extends JsonSupport {
 
 object Main extends App {
   implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "PortfolioSystem")
-  implicit val executionContext: ExecutionContext = system.executionContext // ✅ Un seul ExecutionContext
+  implicit val executionContext: ExecutionContext = system.executionContext
 
   val corsSettings = CorsSettings.defaultSettings
     .withAllowGenericHttpRequests(true)
-    .withAllowedOrigins(HttpOriginMatcher.*) // 🔥 Permet tous les domaines
+    .withAllowedOrigins(HttpOriginMatcher.*)
     .withAllowedMethods(Seq(HttpMethods.GET, HttpMethods.POST, HttpMethods.PUT, HttpMethods.DELETE, HttpMethods.OPTIONS))
-    .withAllowedHeaders(HttpHeaderRange.*) // ✅ Accepte tous les headers
+    .withAllowedHeaders(HttpHeaderRange.*)
 
   val corsRoutes = cors(corsSettings) {
     concat(
@@ -486,7 +558,7 @@ object Main extends App {
   }
 
   Http().newServerAt("localhost", 9000).bind(corsRoutes)
-  println("🚀 Serveur Portfolio démarré sur http://localhost:9000")
+  println("Serveur Portfolio démarré sur http://localhost:9000")
 }
 
 

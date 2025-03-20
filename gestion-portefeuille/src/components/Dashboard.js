@@ -3,7 +3,7 @@ import axios from "axios";
 import { Pie, Line } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement } from "chart.js";
 import Header from "./Header";
-import styles from "./dashboard.css";
+import "./dashboard.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement);
 
@@ -34,14 +34,14 @@ const Dashboard = ({ token }) => {
 
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
         if (!decodedToken.username) {
-            console.error("❌ [ERREUR] Impossible de récupérer le username du token !");
+            console.error("[ERREUR] Impossible de récupérer le username du token !");
             return;
         }
 
-        console.log("🟢 [DEBUG] Utilisateur connecté :", decodedToken.username);
+        console.log("[DEBUG] Utilisateur connecté :", decodedToken.username);
         setUsername(decodedToken.username);
         fetchPortfolio(decodedToken.username);
-        fetchTotalInvested(decodedToken.username);  // ⬅️ Vérifie ici s'il est bien défini
+        fetchTotalInvested(decodedToken.username);
     }, [token]);
 
 
@@ -49,10 +49,10 @@ const Dashboard = ({ token }) => {
     const fetchPriceHistory = async (symbol) => {
         try {
             const response = await axios.get(`${API_URL}/price-fluctuation/${symbol}`);
-            console.log("✅ Données historiques reçues :", response.data);
+            console.log("Données historiques reçues :", response.data);
             setPriceHistory(response.data);
         } catch (error) {
-            console.error("❌ Erreur lors de la récupération de l'historique des prix :", error);
+            console.error("Erreur lors de la récupération de l'historique des prix :", error);
             setError("Erreur lors de la récupération de l'historique des prix.");
         }
     };
@@ -65,18 +65,18 @@ const Dashboard = ({ token }) => {
     };
     const fetchTotalInvested = async (username) => {
         if (!username) {
-            console.error("❌ [ERREUR] Tentative d'appel à fetchTotalInvested avec un username invalide :", username);
+            console.error("[ERREUR] Tentative d'appel à fetchTotalInvested avec un username invalide :", username);
             return; // Évite d'appeler l'API avec undefined
         }
 
-        console.log("Appel API total-invested avec :", username);  // 🔥 Vérification
+        console.log("[DEBUG] Appel API total-invested avec :", username);
 
         try {
             const response = await axios.get(`${API_URL}/portfolio/${username}/total-invested`);
-            console.log("Total investi récupéré :", response.data.totalInvested); // 🔥 Debug
+            console.log("[DEBUG] Total investi récupéré :", response.data.totalInvested);
             setTotalInvested(response.data.totalInvested);
         } catch (error) {
-            console.error(" Erreur lors du chargement du total investi :", error);
+            console.error("Erreur lors du chargement du total investi :", error);
         }
     };
 
@@ -95,7 +95,7 @@ const Dashboard = ({ token }) => {
             localStorage.setItem("token", data.token);
             return true;
         } catch (error) {
-            console.error("❌ Erreur de connexion :", error);
+            console.error("Erreur de connexion :", error);
             return false;
         }
     };
@@ -109,19 +109,15 @@ const Dashboard = ({ token }) => {
             });
 
             setPortfolio(response.data);
+
             fetchMarketData(response.data);
+
+            console.log("Portefeuille mis à jour :", response.data);
         } catch (error) {
+            console.error("Erreur lors du chargement du portefeuille :", error);
             setError("Erreur lors du chargement du portefeuille.");
         }
     };
-
-
-
-
-
-
-
-
 
     const fetchMarketData = async (portfolioData) => {
         if (!portfolioData || portfolioData.length === 0) return;
@@ -131,18 +127,27 @@ const Dashboard = ({ token }) => {
             if (!symbols.trim()) return;
 
             const response = await axios.get(`${API_URL}/market-data?symbols=${symbols}`);
-            setMarketData(response.data);
-            console.log("✅ Données du marché mises à jour :", response.data);
+            console.log("Données du marché mises à jour :", response.data);
+
+            //Vérification approfondie des données reçues
+            response.data.forEach(stock => {
+                console.log(`[DEBUG] ${stock.symbol} - Prix: ${stock.price} | Variation: ${stock.change}%`);
+            });
+
+            // 🛠 Correction : Appliquer une conversion explicite pour éviter les erreurs d'affichage
+            const updatedMarketData = response.data.map(stock => ({
+                ...stock,
+                change: stock.change !== undefined && !isNaN(parseFloat(stock.change))
+                    ? parseFloat(stock.change).toFixed(2) //S'assurer que la variation est bien un nombre
+                    : "N/A"
+            }));
+
+            setMarketData(updatedMarketData);
         } catch (error) {
-            console.error("❌ Erreur lors du chargement des données de marché :", error);
+            console.error("Erreur lors du chargement des données de marché :", error);
             setError("Erreur lors du chargement des données de marché.");
         }
     };
-
-
-
-
-
 
     const handleAddAsset = async (e) => {
         e.preventDefault();
@@ -164,11 +169,6 @@ const Dashboard = ({ token }) => {
         }
     };
 
-
-
-
-
-
     const handleRemoveAsset = async (symbol) => {
         const quantity = parseInt(quantityToRemove[symbol]) || 1;
         if (quantity <= 0) {
@@ -179,19 +179,16 @@ const Dashboard = ({ token }) => {
         try {
             await axios.post(`${API_URL}/portfolio/${username}/remove`, { symbol, quantity });
 
-            await fetchPortfolio(username);
-            await fetchTotalInvested(username);
+            await fetchPortfolio(username); //Mise à jour du portefeuille
+            await fetchTotalInvested(username); //Mise à jour total investi
 
             setMessage(`Action ${symbol} retirée avec succès.`);
-            console.log("🔍 Vérification après suppression :", portfolio);
+            console.log("Vérification après suppression :", portfolio);
         } catch (error) {
-            console.error("❌ Erreur lors de la suppression de l'action :", error);
+            console.error("Erreur lors de la suppression de l'action :", error);
             setError("Erreur lors de la suppression de l'action.");
         }
     };
-
-
-
 
     const portfolioSymbols = portfolio.map(asset => asset.symbol);
     const filteredMarketData = marketData.filter(data => portfolioSymbols.includes(data.symbol));
@@ -206,7 +203,6 @@ const Dashboard = ({ token }) => {
         ],
     };
 
-
     const pieChartOptions = {
         plugins: {
             legend: {
@@ -220,7 +216,6 @@ const Dashboard = ({ token }) => {
             }
         }
     };
-
 
     const chartOptions = {
         responsive: true,
@@ -277,8 +272,6 @@ const Dashboard = ({ token }) => {
         ],
     } : null;
 
-
-
     return (
         <>
             <Header />
@@ -296,9 +289,9 @@ const Dashboard = ({ token }) => {
                     <div className="form-box">
                         <h3> Ajouter un Actif</h3>
                         <form onSubmit={handleAddAsset}>
-                            <input classname="inputD" type="text" placeholder="Symbole (ex: AAPL)" value={symbol} onChange={(e) => setSymbol(e.target.value)} required />
-                            <input classname="inputD" type="number" placeholder="Quantité" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
-                         <center>  <button type="submit" className="add-btn">Ajouter</button> </center>
+                            <input type="text" placeholder="Symbole (ex: AAPL)" value={symbol} onChange={(e) => setSymbol(e.target.value)} required />
+                            <input type="number" placeholder="Quantité" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
+                            <button type="submit" className="add-btn">Ajouter</button>
 
                         </form>
                     </div>
@@ -311,7 +304,6 @@ const Dashboard = ({ token }) => {
                         )}
 
                     </div>
-
 
                 </div>
 
@@ -328,36 +320,54 @@ const Dashboard = ({ token }) => {
 
                     <tbody>
                     {portfolio.length > 0 ? (
-                        portfolio.map((asset, index) => (
-                            <tr key={index}>
-                                <td>{asset.symbol}</td>
-                                <td>{asset.quantity}</td>
-                                <td>{asset.totalPrice ? asset.totalPrice.toFixed(2) + "€" : "0€"}</td>
-                                <td>
-                                    <button className="view-btn" onClick={() => fetchPriceHistory(asset.symbol)}>Voir Évolution</button>
+                        portfolio.map((asset, index) => {
+                            const marketInfo = marketData.find(data => data.symbol.toUpperCase() === asset.symbol.toUpperCase());
+
+                            console.log(`[DEBUG] Données pour ${asset.symbol}:`, marketInfo); //Debug important
+
+                            const priceChangePercent = marketInfo && marketInfo.change !== undefined
+                                ? parseFloat(marketInfo.change).toFixed(2)
+                                : "N/A";
+                            console.log(`[DEBUG] ${asset.symbol} - % de variation reçu: ${marketInfo ? marketInfo.change : "Aucune donnée"}`);
 
 
-                                </td>
-                                <td>
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        placeholder="Quantité"
-                                        value={quantityToRemove[asset.symbol] || ""}
-                                        onChange={(e) => setQuantityToRemove({ ...quantityToRemove, [asset.symbol]: parseInt(e.target.value) || "" })}
-                                    />
+                            const priceChangeStyle = parseFloat(priceChangePercent) > 0
+                                ? { color: "green", fontWeight: "bold" }
+                                : { color: "red", fontWeight: "bold" };
 
+                            console.log(`${asset.symbol} - Pourcentage de variation: ${priceChangePercent}%`);
 
-                                    <button className="remove-btn" onClick={() => handleRemoveAsset(asset.symbol)}>Retirer</button>
-                                </td>
-                            </tr>
-                        ))
+                            return (
+                                <tr key={index}>
+                                    <td>{asset.symbol}</td>
+                                    <td>{asset.quantity}</td>
+                                    <td>{asset.totalPrice ? asset.totalPrice.toFixed(2) + "€" : "0€"}</td>
+                                    <td style={priceChangeStyle}>
+                                        {priceChangePercent}% {priceChangePercent > 0 ? "🔼" : "🔽"}
+                                    </td>
+                                    <td>
+                                        <button className="view-btn" onClick={() => fetchPriceHistory(asset.symbol)}>Voir Évolution</button>
+                                    </td>
+                                    <td>
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            placeholder="Quantité"
+                                            value={quantityToRemove[asset.symbol] || ""}
+                                            onChange={(e) => setQuantityToRemove({ ...quantityToRemove, [asset.symbol]: parseInt(e.target.value) || "" })}
+                                        />
+                                        <button className="remove-btn" onClick={() => handleRemoveAsset(asset.symbol)}>Retirer</button>
+                                    </td>
+                                </tr>
+                            );
+                        })
                     ) : (
                         <tr>
-                            <td colSpan="4">Aucune action détenue.</td>
+                            <td colSpan="5">Aucune action détenue.</td>
                         </tr>
                     )}
                     </tbody>
+
                 </table>
 
 
